@@ -36,6 +36,21 @@ CREATE TABLE cites(
     PRIMARY KEY (id));
 
 USE cites;
+
+CREATE TABLE taxon(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id)) SELECT DISTINCT taxon,class,`order`,family,genus FROM cites;
+
+SELECT * FROM cites.cites;
+ALTER TABLE cites DROP COLUMN class, DROP COLUMN `order`, DROP COLUMN family, DROP COLUMN genus;
+ALTER TABLE cites DROP COLUMN species;
+ALTER TABLE cites CHANGE taxon species VARCHAR(50);
+
+CREATE TABLE cites2 SELECT * FROM cites INNER JOIN taxon ON taxon.taxon = cites.species;
+SELECT * FROM cites.cites2;
+ALTER TABLE cites2 DROP COLUMN taxon, DROP COLUMN class, DROP COLUMN `order`, DROP COLUMN family, DROP COLUMN genus;
+ALTER TABLE cites2 CHANGE id taxon_id INT NOT NULL;
+ALTER TABLE cites2 MODIFY COLUMN taxon_id INT NOT NULL AFTER appendix;
+ALTER TABLE cites2 DROP COLUMN species;
+
 ALTER TABLE cites CHANGE id tag INT NOT NULL AUTO_INCREMENT;
 CREATE TABLE citesesl SELECT * FROM cites INNER JOIN esl ON esl.scientific_name = cites.taxon;
 ALTER TABLE citesesl DROP COLUMN tag, DROP COLUMN id, DROP COLUMN scientific_name;
